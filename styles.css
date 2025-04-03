@@ -52,3 +52,18 @@ nav a {
     height: auto;
     border-radius: 10px;
 }
+.recipe-item img {
+    width: 100%;
+    border-radius: 10px;
+}
+.recipe-item a {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    display: block;
+    margin-top: 5px;
+}
+.recipe-item a:hover {
+    color: #007BFF;
+}
