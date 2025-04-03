@@ -1,0 +1,54 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: hsl(4, 77%, 92%);
+}
+
+nav {
+    background-color: hsl(5, 100%, 69%);
+    padding: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 2.0rem;
+    font-weight: bold;
+}
+
+.landing-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 30vh;
+    color: white;
+    padding: 20px;
+}
+
+.landing-container h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.landing-container p {
+    font-size: 1.25rem;
+    width: 60%;
+}
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20;
+}
+
+.image-container img {
+    max-width: 375px;
+    max-height: 100%;
+    height: auto;
+    border-radius: 10px;
+}
