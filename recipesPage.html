@@ -49,5 +49,34 @@
         </div>
     </div>
 
+    <script>
+        // Fetch and display recipes from a JSON file
+        async function loadRecipes() {
+            try {
+                const response = await fetch('recipes.json'); // Assuming recipes are stored here
+                const recipes = await response.json();
+                const recipeList = document.getElementById('recipe-list');
+
+                recipes.forEach(recipe => {
+                    const recipeItem = document.createElement('div');
+                    recipeItem.classList.add('col');
+                    recipeItem.innerHTML = `
+                        <div class="card">
+                            <img src="${recipe.image}" class="card-img-top" alt="${recipe.name}">
+                            <div class="card-body text-center">
+                                <a href="recipes/${recipe.filename}" class="card-title">${recipe.name}</a>
+                            </div>
+                        </div>
+                    `;
+                    recipeList.appendChild(recipeItem);
+                });
+            } catch (error) {
+                console.error("Error loading recipes:", error);
+            }
+        }
+
+        loadRecipes();
+    </script>
+
 </body>
 </html>
