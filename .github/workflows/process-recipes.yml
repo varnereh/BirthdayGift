@@ -1,0 +1,79 @@
+name: Process Recipe Submissions
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process_recipe:
+    if: contains(github.event.issue.labels.*.name, 'recipe-submission')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Extract Recipe Data
+        run: |
+          import json
+          import os
+          import re
+
+          issue_body = '''${{ github.event.issue.body }}'''
+
+          # Extract data
+          title = '${{ github.event.issue.title }}'.replace("New Recipe: ", "").strip()
+          match = re.search(r'\*\*Ingredients & Instructions:\*\*\n(.*?)\n\n\*\*Images:\*\*', issue_body, re.DOTALL)
+          instructions = match.group(1).strip() if match else "No instructions provided"
+          image_links = re.findall(r'!\[.*?\]\((.*?)\)', issue_body)  # Extract image URLs
+
+          # Ensure `recipes` folder exists
+          os.makedirs("recipes", exist_ok=True)
+
+          # Create recipe HTML file
+          filename = f"{title.lower().replace(' ', '-')}.html"
+          with open(f"recipes/{filename}", "w") as f:
+              f.write(f"""
+              <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1">
+                  <title>{title}</title>
+                  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+              </head>
+              <body class="container">
+                  <h1 class="my-4">{title}</h1>
+                  <p>{instructions.replace('\\n', '<br>')}</p>
+                  <div>
+                      {''.join(f'<img src="{img}" class="img-fluid my-3" alt="{title}">' for img in image_links)}
+                  </div>
+              </body>
+              </html>
+              """)
+
+          # Update recipes.json
+          with open("recipes.json", "r+") as json_file:
+              recipes = json.load(json_file)
+              recipes.append({
+                  "name": title,
+                  "filename": f"recipes/{filename}",
+                  "image": image_links[0] if image_links else "images/default.jpg"
+              })
+              json_file.seek(0)
+              json.dump(recipes, json_file, indent=4)
+
+        shell: python
+
+      - name: Commit & Push Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add recipes.json recipes/
+          git commit -m "Added new recipe: ${{ github.event.issue.title }}"
+          git push
