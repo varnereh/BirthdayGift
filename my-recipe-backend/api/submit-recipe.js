@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
         const { name, description, images } = req.body;
-        const githubToken = process.env.RECIPE_SUBMISSION_TOKEN; 
+        const githubToken = process.env.GITHUB_TOKEN; 
         const repoOwner = 'varnereh';
         const repoName = 'BirthdayGift';
         
