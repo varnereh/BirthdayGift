@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = async (req, res) => {
     // Add CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Or replace * with your frontend domain
+    res.setHeader('Access-Control-Allow-Origin', 'https://varnereh.github.io');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
