@@ -50,13 +50,13 @@
     </div>
 
     <script>
-        // Fetch and display recipes from a JSON file
+        // Load existing recipes
         async function loadRecipes() {
             try {
                 const response = await fetch('recipes.json'); 
                 const recipes = await response.json();
                 const recipeList = document.getElementById('recipe-list');
-
+    
                 recipes.forEach(recipe => {
                     const recipeItem = document.createElement('div');
                     recipeItem.classList.add('col');
@@ -64,7 +64,7 @@
                         <div class="card">
                             <img src="${recipe.image}" class="card-img-top" alt="${recipe.name}">
                             <div class="card-body text-center">
-                                <a href="recipes/${recipe.filename}" class="card-title">${recipe.name}</a>
+                                <a href="${recipe.filename}" class="card-title">${recipe.name}</a>
                             </div>
                         </div>
                     `;
@@ -74,37 +74,30 @@
                 console.error("Error loading recipes:", error);
             }
         }
-
+    
         loadRecipes();
-
-        // Handle form submission
+    
+        // Handle recipe submission
         document.getElementById("recipe-form").addEventListener("submit", async function(event) {
             event.preventDefault();
-
-            const name = document.getElementById("recipe-name").value;
-            const description = document.getElementById("recipe-description").value;
+    
+            const name = document.getElementById("recipe-name").value.trim();
+            const description = document.getElementById("recipe-description").value.trim();
             const imageInput = document.getElementById("recipe-images");
             const images = [];
-
+    
+            // Convert images to base64
             if (imageInput.files.length > 0) {
                 for (let file of imageInput.files) {
                     const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    await new Promise(resolve => reader.onload = () => {
-                        images.push(reader.result); // Convert image to base64
-                        resolve();
+                    const base64 = await new Promise((resolve) => {
+                        reader.onload = () => resolve(reader.result);
+                        reader.readAsDataURL(file);
                     });
+                    images.push(base64);
                 }
             }
-
-            const issueTitle = `New Recipe: ${name}`;
-            const issueBody = `**Recipe Name:** ${name}\n\n**Ingredients & Instructions:**\n${description}\n\n**Images:**\n${images.join("\n")}`;
-            
-            // dont look at this pls
-            const githubToken = "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"; 
-            const repoOwner = "varnereh"; 
-            const repoName = "BirthdayGift"; 
-
+    
             try {
                 const response = await fetch('https://birthday-gift-drab.vercel.app/api/submit-recipe', {
                     method: 'POST',
@@ -117,15 +110,18 @@
                         images: images
                     })
                 });
-
+    
                 if (response.ok) {
                     alert("Recipe submitted successfully!");
                     document.getElementById("recipe-form").reset();
                 } else {
-                    alert("Failed to submit recipe. Please try again.");
+                    const errorText = await response.text();
+                    console.error("Server response:", errorText);
+                    alert("Failed to submit recipe.");
                 }
             } catch (error) {
                 console.error("Error submitting recipe:", error);
+                alert("There was an error submitting your recipe.");
             }
         });
     </script>
