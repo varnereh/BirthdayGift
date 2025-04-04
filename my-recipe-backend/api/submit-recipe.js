@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require('../node_modules/axios/index.d.cts');
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
