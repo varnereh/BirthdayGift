@@ -54,6 +54,7 @@
         async function loadRecipes() {
             try {
                 const response = await fetch('recipes.json'); 
+                console.log("failed to fetch");
                 const recipes = await response.json();
                 const recipeList = document.getElementById('recipe-list');
 
