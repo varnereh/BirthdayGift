@@ -1,6 +1,16 @@
-const axios = require('../node_modules/axios/index.d.cts');
+const axios = require('axios');
 
 module.exports = async (req, res) => {
+    // Add CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Or replace * with your frontend domain
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle preflight request
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     if (req.method === 'POST') {
         const { name, description, images } = req.body;
         const githubToken = process.env.GITHUB_TOKEN; 
