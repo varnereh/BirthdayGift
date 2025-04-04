@@ -51,6 +51,33 @@
     </div>
 
     <script>
+        // Load existing recipes
+        async function loadRecipes() {
+            try {
+                const response = await fetch('recipes.json'); 
+                const recipes = await response.json();
+                const recipeList = document.getElementById('recipe-list');
+    
+                recipes.forEach(recipe => {
+                    const recipeItem = document.createElement('div');
+                    recipeItem.classList.add('col');
+                    recipeItem.innerHTML = `
+                        <div class="card">
+                            <img src="${recipe.image}" class="card-img-top" alt="${recipe.name}">
+                            <div class="card-body text-center">
+                                <a href="${recipe.filename}" class="card-title">${recipe.name}</a>
+                            </div>
+                        </div>
+                    `;
+                    recipeList.appendChild(recipeItem);
+                });
+            } catch (error) {
+                console.error("Error loading recipes:", error);
+            }
+        }
+    
+        loadRecipes();
+
         // Initialize Cloudinary widget
         const cloudinaryWidget = cloudinary.createUploadWidget({
             cloudName: 'dvaiu0ej7', 
