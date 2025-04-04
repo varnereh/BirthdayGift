@@ -14,7 +14,13 @@ const imagesMatch = body.match(/\*\*Images:\*\*\n([\s\S]*)/);
 const imageList = imagesMatch ? imagesMatch[1].trim().split("\n").filter(Boolean) : [];
 
 const fileSafeName = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-const filename = `recipes/${fileSafeName}.html`;
+const recipesDir = path.join(__dirname, "..", "..", "recipes");
+const filename = path.join(recipesDir, `${fileSafeName}.html`);
+
+// ✅ Ensure 'recipes' folder exists
+if (!fs.existsSync(recipesDir)) {
+    fs.mkdirSync(recipesDir, { recursive: true });
+}
 
 // Create the HTML page
 const htmlContent = `
@@ -35,16 +41,16 @@ const htmlContent = `
 fs.writeFileSync(filename, htmlContent);
 
 // Update recipes.json
-const recipesPath = "recipes.json";
+const recipesJsonPath = path.join(__dirname, "..", "..", "recipes.json");
 let recipes = [];
-if (fs.existsSync(recipesPath)) {
-    recipes = JSON.parse(fs.readFileSync(recipesPath, "utf-8"));
+if (fs.existsSync(recipesJsonPath)) {
+    recipes = JSON.parse(fs.readFileSync(recipesJsonPath, "utf-8"));
 }
 recipes.push({
     name: name,
     image: imageList[0] || "",
-    filename: filename
+    filename: `recipes/${fileSafeName}.html`
 });
-fs.writeFileSync(recipesPath, JSON.stringify(recipes, null, 2));
+fs.writeFileSync(recipesJsonPath, JSON.stringify(recipes, null, 2));
 
 console.log(`Recipe "${name}" added to ${filename} and recipes.json.`);
