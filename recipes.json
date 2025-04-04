@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Chocolate Cake",
+        "filename": "chocolate-cake.html",
+        "image": "images/together_pic1.jpeg"
+    },
+    {
+        "name": "Spaghetti Carbonara",
+        "filename": "spaghetti-carbonara.html",
+        "image": "images/drumstick.jpeg"
+    }
+]
