@@ -95,10 +95,15 @@
             if (error) {
                 console.error("Cloudinary upload error:", error);
             } else if (result.event === 'success') {
-                const uploadedImages = result.info.files.map(file => file.secure_url); // Get URLs of uploaded images
-                if (uploadedImages.length > 0) {
-                    // Save the image URLs to be sent with the form submission
-                    document.getElementById('uploaded-images').value = JSON.stringify(uploadedImages); // Hidden input field to store image URLs
+                // Ensure result.info and result.info.files are defined
+                if (result.info && result.info.files) {
+                    const uploadedImages = result.info.files.map(file => file.secure_url); // Get URLs of uploaded images
+                    if (uploadedImages.length > 0) {
+                        // Save the image URLs to be sent with the form submission
+                        document.getElementById('uploaded-images').value = JSON.stringify(uploadedImages); // Hidden input field to store image URLs
+                    }
+                } else {
+                    console.error("Unexpected result structure:", result);
                 }
             }
         });
