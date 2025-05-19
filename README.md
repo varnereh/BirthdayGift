@@ -4,3 +4,5 @@
 # Might not be as polished as those, but it sure is heartfelt!
 
 # Utilizes Github Actions and Vercel to securely and, at least to me, interestingly allow my girlfriend to submit recipes to this app.
+
+# CURRENTLY SITLL A WORK IN PROGRESS
